@@ -24,7 +24,6 @@ public class LogWriter implements Runnable {
 	// IMPLEMENT RUNNABLE INTERFACE METHOD
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		logToFile();
 	}
 	
@@ -61,10 +60,8 @@ public class LogWriter implements Runnable {
 	}
 	
 	private String getCurrentTime() {
-		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
-		String dateString = sdf.format(date);
-		return dateString;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
+		return dateFormat.format(new Date());
 	}
 	
 	private void writeToFile() {

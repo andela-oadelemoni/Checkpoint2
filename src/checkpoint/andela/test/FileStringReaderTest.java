@@ -34,7 +34,7 @@ public class FileStringReaderTest {
 
 	@Before
 	public void setUp() throws Exception {
-		fileReader = new FileStringReader(pathToTarget);
+		//fileReader = new FileStringReader(pathToTarget);
 	}
 
 	@After

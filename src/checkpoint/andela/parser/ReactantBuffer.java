@@ -6,9 +6,12 @@ import java.util.concurrent.BlockingQueue;
 
 public class ReactantBuffer
 {
+	  
 	// PROPERTIES
 	public static final int RESOURCE_LIMIT = 1;
 	private BlockingQueue<TreeMap<String, String>> queue = new ArrayBlockingQueue<>(RESOURCE_LIMIT);
+	private boolean done = false;
+	// LIST TO HOLD LOG FILES.
 	
 	public boolean isFull() {
 		return queue.size() >= RESOURCE_LIMIT;
@@ -20,12 +23,10 @@ public class ReactantBuffer
 	
 	public synchronized void putReactant(TreeMap<String, String> reactant) {
 		while (isFull()) {
-			try
-			{
+			try {
 				wait();
 			}
-			catch (InterruptedException e)
-			{
+			catch (InterruptedException e) {
 				// Ignore
 			}
 		}
@@ -46,5 +47,14 @@ public class ReactantBuffer
 		notifyAll();
 		return reactantData;
 	}
-	 
+	
+	public synchronized void setDone(boolean done) {
+		this.done = done;
+		notifyAll();
+	}
+	
+	public synchronized boolean isDone() {
+		return done;
+	}
+	
 }

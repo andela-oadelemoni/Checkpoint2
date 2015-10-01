@@ -1,42 +1,39 @@
 package checkpoint.andela.parser;
 
-import java.util.TreeMap;
+import checkpoint.andela.log.LogWriter;
 
-public class FileParser implements Parser {
+public class ReactantFileParser implements Parser {
 	
 	// PROPERTIES
-	private ReactantBuffer buffer;
-	private TreeMap<String, String> reactant = new TreeMap<>();
+	private ReactantProcessor processor;
 	
 	// PARSING CONDITIONS
 	public static final String LINE_BREAK = "//";
 	public static final String COMMENT = "#";
 	
 	// CONSTRUCTOR
-	public FileParser(ReactantBuffer buffer) {
-		this.buffer = buffer;
+	public ReactantFileParser(ReactantBuffer buffer, LogWriter logWriter) {
+		processor = new ReactantProcessor(buffer, logWriter);
 	}
 
 	@Override
 	public void formatString(String string) {
-		
-		String[] keyValueArray = new String[2];
-		
-		// CHECK FOR RELEVANT STRING
+		String[] keyValueArray;
+		// CHECK FOR VALID STRING
 		if (validString(string)) {
 			keyValueArray = string.trim().split(" - ");
-			// BUILD REACTION
-			if (keyValueArray.length > 1)
-				reactant.put(keyValueArray[0], keyValueArray[1]);
+			processor.addReactantData(keyValueArray);
 		}
-		// CHECK FOR COMPLETE RECORD SET
+		// CHECK FOR COMPLETE RECORD
 		else if(isCompleteRecord(string)) {
-			// SEND COMPLETED REACTION TO BUFFER
-			buffer.putReactant(reactant);
-			// RESET REACTANT OBJECT
-			reactant = new TreeMap<>();
+			processor.processReactantData();
 		}
 		
+	}
+	
+	@Override
+	public synchronized void setDone(boolean done) {
+		processor.setDone(done);
 	}
 	
 	private boolean validString(String string) {

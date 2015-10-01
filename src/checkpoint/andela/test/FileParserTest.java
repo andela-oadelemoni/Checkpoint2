@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import checkpoint.andela.log.LogBuffer;
 import checkpoint.andela.log.LogWriter;
-import checkpoint.andela.parser.FileParser;
+import checkpoint.andela.parser.ReactantFileParser;
 import checkpoint.andela.parser.ReactantBuffer;
 
 public class FileParserTest {

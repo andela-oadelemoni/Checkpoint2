@@ -4,7 +4,7 @@ import java.nio.file.Paths;
 import checkpoint.andela.db.DBWriter;
 import checkpoint.andela.log.LogBuffer;
 import checkpoint.andela.log.LogWriter;
-import checkpoint.andela.parser.FileParser;
+import checkpoint.andela.parser.ReactantFileParser;
 import checkpoint.andela.parser.FileStringReader;
 import checkpoint.andela.parser.ReactantBuffer;
 
@@ -15,15 +15,19 @@ public class TestRun {
 	private static final Path targetPath = Paths.get(dirPath+"log.txt");
 	private static final String dbConfigPath = dirPath+"db.properties";
 	
-	// OBJECTS
+	// BUFFERS
 	ReactantBuffer buffer = new ReactantBuffer();
-	FileParser fileParser = new FileParser(buffer);
+	LogBuffer logBuffer = new LogBuffer();
+	// OBJECTS
+	LogWriter logWriter = new LogWriter(targetPath, logBuffer);
+	ReactantFileParser fileParser = new ReactantFileParser(buffer, logWriter);
 	FileStringReader fileReader = new FileStringReader(sourcePath, fileParser);
-	DBWriter dbWriter = new DBWriter(dbConfigPath, buffer);
+	DBWriter dbWriter = new DBWriter(dbConfigPath, buffer, logWriter);
 	
 	// THREADS
 	Thread fileReaderThread = new Thread(fileReader);
 	Thread dbWriterThread = new Thread(dbWriter);
+	Thread logWriterThread = new Thread(logWriter);
 	
 	
 	// main method to start the threads above
@@ -35,5 +39,6 @@ public class TestRun {
 	public void runTest() {
 		fileReaderThread.start();
 		dbWriterThread.start();
+		logWriterThread.start();
 	}
 }

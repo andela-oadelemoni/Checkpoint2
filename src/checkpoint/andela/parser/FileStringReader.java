@@ -13,10 +13,6 @@ public class FileStringReader implements Runnable {
 	private Parser parser;
 	
 	// CONSTRUCTOR
-	public FileStringReader(Path filePath) {
-		this.filePath = filePath;
-	}
-	
 	public FileStringReader(Path filePath, Parser parser) {
 		this.filePath = filePath;
 		this.parser = parser;
@@ -30,6 +26,8 @@ public class FileStringReader implements Runnable {
 		    while ((line = bufferedReader.readLine()) != null) {
 		        parser.formatString(line);
 		    }
+		    // SEND SIGNAL TO PARSER ON COMPLETION
+		    parser.setDone(true);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
