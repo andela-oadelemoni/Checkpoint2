@@ -7,24 +7,43 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import checkpoint.andela.parser.FileStringReader;
+import checkpoint.andela.parser.Parser;
 
 public class FileStringReaderTest {
 	
-	private FileStringReader fileReader;
+	private static FileStringReader fileReader;
+	private static MockParser mockParser = new MockParser();
+	private static Thread thread;
 	private static Path pathToTarget = Paths.get("/Users/kamiye/Documents/workspace/fileParser.txt");
 	private static String fileContent = "Test File Line 1\nTest File Line 2";
+	
+	// MOCK PARSER CLASS TO TEST FILE READER CLASS
+	private static class MockParser implements Parser {
+
+		public List<String> actual = new ArrayList<>();
+		
+		@Override
+		public void formatString(String string) {
+			// TODO Auto-generated method stub
+			actual.add(string);
+		}
+
+		@Override
+		public void setDone(boolean done) {
+		}
+		
+	}
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		createTestFile();
+		fileReader = new FileStringReader(pathToTarget, mockParser);
 	}
 
 	@AfterClass
@@ -34,7 +53,7 @@ public class FileStringReaderTest {
 
 	@Before
 	public void setUp() throws Exception {
-		//fileReader = new FileStringReader(pathToTarget);
+		thread = new Thread(fileReader);
 	}
 
 	@After
@@ -42,12 +61,24 @@ public class FileStringReaderTest {
 	}
 	
 	@Test
-	public void testReadFile() {
+	public void testRunnable_readFile() throws InterruptedException {
+		thread.start();
+		Thread.sleep(2000);
+		List<String> actualList = mockParser.actual;
+		String expected = "Test File Line 1";
+		String actual = actualList.get(0);
+		
+		assertEquals("ReadFile assertion error", expected, actual);
+		
+		expected = "Test File Line 2";
+		actual = actualList.get(1);
+		
+		assertEquals("ReadFile assertion error", expected, actual);
 	}
 	
 	private static void createTestFile() throws IOException {
 		BufferedWriter writer = Files.newBufferedWriter(pathToTarget);
-		// WRITE LOG ONE LINE AT A TIME
+		// WRITE FILE CONTENT ONE LINE AT A TIME
 		writer.write(fileContent);
 		// CLOSE BUFFERED WRITER WHEN THROUGH
 		writer.close();

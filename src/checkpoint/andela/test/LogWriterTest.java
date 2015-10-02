@@ -20,7 +20,7 @@ import checkpoint.andela.log.LogWriter;
 
 public class LogWriterTest {
 	
-	/*private LogWriter logWriter;
+	private LogWriter logWriter;
 	private LogBuffer logBuffer = new LogBuffer();
 	private Path pathToTarget = Paths.get("/Users/kamiye/Documents/workspace/logWriter.txt");
 	private Thread logWriterThread;
@@ -140,5 +140,5 @@ public class LogWriterTest {
 		String dateString=sdf.format(date);
 		return dateString;
 	}
-*/
+
 }

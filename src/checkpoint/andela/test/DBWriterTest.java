@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.TreeMap;
 
 import javax.sql.DataSource;
 
@@ -22,7 +23,7 @@ import checkpoint.andela.parser.ReactantBuffer;
 
 public class DBWriterTest {
 	
-	/*private String config = "/Users/kamiye/Documents/workspace/dbWriterTest.properties";
+	private String config = "/Users/kamiye/Documents/workspace/dbWriterTest.properties";
 	private ReactantBuffer stringBuffer = new ReactantBuffer();
 	private DBWriter dbWriter;
 	private DBManager dbManager = new DBManager(config);
@@ -31,10 +32,11 @@ public class DBWriterTest {
 	@Before
 	public void setUp() throws Exception {
 		createTestDBTable();
-		stringBuffer.putData("NAME - DBWriterTest");
+		TreeMap<String, String> testReactant = new TreeMap<>();
+		testReactant.put("NAME", "DBWriterTest");
+		stringBuffer.putReactant(testReactant);
 		dbWriter = new DBWriter(config, stringBuffer);
 		dbWriterThread = new Thread(dbWriter);
-		
 	}
 
 	@After
@@ -46,7 +48,6 @@ public class DBWriterTest {
 	public void testRunnable() {
 		String dbData = "DBWriterTest";
 		dbWriterThread.start();
-		stringBuffer.putData("//");
 		String actualData = getTestDBData();
 		
 		assertEquals("DBWriter assertion error", dbData, actualData);
@@ -111,5 +112,5 @@ public class DBWriterTest {
 		}
 		return name;
 	}
-*/
+
 }
