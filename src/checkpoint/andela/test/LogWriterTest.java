@@ -37,7 +37,7 @@ public class LogWriterTest {
 	}
 
 	@Test
-	public void testRunnable() {
+	public void testRunnable() throws InterruptedException, IOException {
 		logBuffer.addLog("Log data 1");
 		logBuffer.addLog("Log data 2");
 		
@@ -46,92 +46,56 @@ public class LogWriterTest {
 		logWriterThread.start();
 		logWriter.setDone(true);
 		
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		Thread.sleep(3000);
 		
 		String actualLine1 = "";
 		String actualLine2 = "";
-		try {
-			BufferedReader bufferedReader = Files.newBufferedReader(pathToTarget);
-			actualLine1 = bufferedReader.readLine();
-			actualLine2 = bufferedReader.readLine();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		BufferedReader bufferedReader = Files.newBufferedReader(pathToTarget);
+		actualLine1 = bufferedReader.readLine();
+		actualLine2 = bufferedReader.readLine();
+		
 		
 		assertEquals("LogWriterThread assertion failed", expected1, actualLine1);
 		assertEquals("LogWriterThread assertion failed", expected2, actualLine2);
 	}
 	
 	@Test
-	public void testFileParserLog() {
+	public void testFileParserLog() throws InterruptedException, IOException {
 		String expected = "FileParser Thread ("+getCurrentTime()+")---- wrote SOMETHING to buffer";
 		logWriter.fileParserLog("SOMETHING");
 		
 		logWriterThread.start();
 		logWriter.setDone(true);
 		
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		Thread.sleep(3000);
 		
 		String actualLine = "";
-		try {
-			BufferedReader bufferedReader = Files.newBufferedReader(pathToTarget);
-			actualLine = bufferedReader.readLine();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		BufferedReader bufferedReader = Files.newBufferedReader(pathToTarget);
+		actualLine = bufferedReader.readLine();
 		
 		assertEquals("LogWriterThread assertion failed", expected, actualLine);
 	}
 	
 	@Test
-	public void testDBWriterLog() {
+	public void testDBWriterLog() throws InterruptedException, IOException {
 		String expected = "DBWriter Thread ("+getCurrentTime()+")---- collected SOMETHING from buffer";
 		logWriter.dbWriterLog("SOMETHING");
 		
 		logWriterThread.start();
 		logWriter.setDone(true);
 		
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		Thread.sleep(3000);
 		
 		String actualLine = "";
-		try {
-			BufferedReader bufferedReader = Files.newBufferedReader(pathToTarget);
-			actualLine = bufferedReader.readLine();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		BufferedReader bufferedReader = Files.newBufferedReader(pathToTarget);
+		actualLine = bufferedReader.readLine();
 		
 		assertEquals("LogWriterThread assertion failed", expected, actualLine);
 	}
 	
-	private void deleteCreatedLog() {
-		try {
-			Files.delete(pathToTarget);
-		}
-		catch (NoSuchFileException e) {
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	private void deleteCreatedLog() throws NoSuchFileException, IOException {
+		Files.delete(pathToTarget);
 	}
 	
 	private String getCurrentTime() {

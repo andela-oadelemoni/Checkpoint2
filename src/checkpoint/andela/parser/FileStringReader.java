@@ -17,11 +17,6 @@ public class FileStringReader implements Runnable {
 	private ReactantProcessor processor;
 	
 	// CONSTRUCTOR
-	public FileStringReader(Path filePath, Parser parser) {
-		this.filePath = filePath;
-		this.parser = parser;
-	}
-	
 	public FileStringReader(Path filePath, Parser parser, ReactantProcessor processor) {
 		this.filePath = filePath;
 		this.parser = parser;
@@ -52,13 +47,17 @@ public class FileStringReader implements Runnable {
 		this.logWriter = logWriter;
 	}
 	
+	public LogWriter getLogWriter() {
+		return logWriter;
+	}
+	
 	private void processLine(String string) {
 		if (parser.isValidRecord(string)) {
 			processor.addReactantData(parser.buildData(string));
 		}
 		else if (parser.isCompleteRecord(string)) {
 			if (logWriter != null)
-				logAction(string);
+				logAction(processor.getReactantUniqueID());
 			processor.resetReactant();
 		}
 	}

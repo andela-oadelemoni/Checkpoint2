@@ -45,7 +45,7 @@ public class DBWriterTest {
 	}
 
 	@Test
-	public void testRunnable() {
+	public void testRunnable_writeToDB() throws SQLException {
 		String dbData = "DBWriterTest";
 		dbWriterThread.start();
 		String actualData = getTestDBData();
@@ -63,52 +63,38 @@ public class DBWriterTest {
 		assertEquals("DBWriter assertion error", logWriter, actual);
 	}
 	
-	private void createTestDBTable() {
+	private void createTestDBTable() throws SQLException {
 		DataSource dataSource = dbManager.getDataSource();
 		
 		String queryString = "CREATE TABLE DBWRITERTEST (NAME VARCHAR(255))";
 		
-		try (Connection con = dataSource.getConnection()) {
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate(queryString);
-		}
-		catch (SQLException e) {
-			
-		}
+		Connection con = dataSource.getConnection();
+		Statement stmt = con.createStatement();
+		stmt.executeUpdate(queryString);
+		
 	}
 	
-	private void deleteTestDBTable() {
+	private void deleteTestDBTable() throws SQLException {
 		DataSource dataSource = dbManager.getDataSource();
 		
 		String queryString = "DROP TABLE DBWRITERTEST";
-		
-		try (Connection con = dataSource.getConnection()) {
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate(queryString);
-			
-			// LOG FILE SUPPOSED TO ENTER HERE
-		}
-		catch (SQLException e) {
-			
-		}
+		Connection con = dataSource.getConnection();
+		Statement stmt = con.createStatement();
+		stmt.executeUpdate(queryString);
 	}
 	
-	private String getTestDBData() {
+	private String getTestDBData() throws SQLException {
 		DataSource dataSource = dbManager.getDataSource();
 		
 		String name = "";
 		
 		String queryString = "SELECT * FROM DBWRITERTEST";
-		
-		try (Connection con = dataSource.getConnection()) {
-			Statement stmt = con.createStatement();
-			ResultSet result = stmt.executeQuery(queryString);
-			if (result.next()) {
-				name = result.getString("name");
-			}
-		}
-		catch (SQLException e) {
-			
+
+		Connection con = dataSource.getConnection();
+		Statement stmt = con.createStatement();
+		ResultSet result = stmt.executeQuery(queryString);
+		if (result.next()) {
+			name = result.getString("name");
 		}
 		return name;
 	}

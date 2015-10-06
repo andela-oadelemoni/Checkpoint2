@@ -7,51 +7,35 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
+import checkpoint.andela.log.LogBuffer;
+import checkpoint.andela.log.LogWriter;
 import checkpoint.andela.parser.FileStringReader;
-import checkpoint.andela.parser.Parser;
+import checkpoint.andela.parser.Reactant;
+import checkpoint.andela.parser.ReactantBuffer;
+import checkpoint.andela.parser.ReactantFileParser;
+import checkpoint.andela.parser.ReactantProcessor;
 
 public class FileStringReaderTest {
 	
 	private static FileStringReader fileReader;
-	private static MockParser mockParser = new MockParser();
+	private static ReactantFileParser mockParser = new ReactantFileParser();
+	private static ReactantBuffer buffer = new ReactantBuffer();
+	private static ReactantProcessor processor = new ReactantProcessor(buffer);
 	private static Thread thread;
 	private static Path pathToTarget = Paths.get("/Users/kamiye/Documents/workspace/fileParser.txt");
-	private static String fileContent = "Test File Line 1\nTest File Line 2";
-	
-	// MOCK PARSER CLASS TO TEST FILE READER CLASS
-	private static class MockParser implements Parser {
-
-		public List<String> actual = new ArrayList<>();
-
-		@Override
-		public boolean isValidRecord(String string) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean isCompleteRecord(String string) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public String[] buildData(String string) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
-	}
+	private static String fileContent = "#Test File Line 1\nKey - Value\n//";
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		createTestFile();
-		fileReader = new FileStringReader(pathToTarget, mockParser);
+		fileReader = new FileStringReader(pathToTarget, mockParser, processor);
 	}
 
 	@AfterClass
@@ -72,16 +56,20 @@ public class FileStringReaderTest {
 	public void testRunnable_readFile() throws InterruptedException {
 		thread.start();
 		Thread.sleep(2000);
-		List<String> actualList = mockParser.actual;
-		String expected = "Test File Line 1";
-		String actual = actualList.get(0);
+		Reactant reactant = processor.getReactant();
 		
-		assertEquals("ReadFile assertion error", expected, actual);
+		assertNotNull("Reactant Creation assertion error", reactant);
 		
-		expected = "Test File Line 2";
-		actual = actualList.get(1);
+	}
+	
+	@Test
+	public void testLogWriterSetter() {
+		LogWriter logWriter = new LogWriter(Paths.get("dummyfile"), new LogBuffer());
+		fileReader.setLogWriter(logWriter);
 		
-		assertEquals("ReadFile assertion error", expected, actual);
+		LogWriter actual = fileReader.getLogWriter();
+		
+		assertEquals("LogWriter Setter assertion error", logWriter, actual);
 	}
 	
 	private static void createTestFile() throws IOException {

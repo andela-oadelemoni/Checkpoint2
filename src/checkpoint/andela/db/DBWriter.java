@@ -33,7 +33,8 @@ public class DBWriter implements Runnable {
 			String queryString = dbObject.generateInsertQuery(reactant);
 			dbObject.executeQuery(queryString);
 			// LOG ACTION
-			logWriter.dbWriterLog(reactant.get("UNIQUE-ID"));
+			if (logWriter != null)
+				logWriter.dbWriterLog(reactant.get("UNIQUE-ID"));
 		}
 		logWriter.setDone(true);
 	}
