@@ -22,11 +22,11 @@ public class FileStringReader implements Runnable {
 		String line;
 		try {
 			bufferedReader = Files.newBufferedReader(filePath);
-		    while ((line = bufferedReader.readLine()) != null) {
-		        parser.formatString(line);
-		    }
+			while ((line = bufferedReader.readLine()) != null) {
+				parser.formatString(line);
+			}
 		    // SEND SIGNAL TO PARSER ON COMPLETION
-		    parser.setDone(true);
+			parser.setDone(true);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
