@@ -27,15 +27,23 @@ public class FileStringReaderTest {
 	private static class MockParser implements Parser {
 
 		public List<String> actual = new ArrayList<>();
-		
+
 		@Override
-		public void formatString(String string) {
+		public boolean isValidRecord(String string) {
 			// TODO Auto-generated method stub
-			actual.add(string);
+			return false;
 		}
 
 		@Override
-		public void setDone(boolean done) {
+		public boolean isCompleteRecord(String string) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public String[] buildData(String string) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 		
 	}

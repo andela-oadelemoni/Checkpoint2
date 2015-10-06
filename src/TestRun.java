@@ -4,9 +4,10 @@ import java.nio.file.Paths;
 import checkpoint.andela.db.DBWriter;
 import checkpoint.andela.log.LogBuffer;
 import checkpoint.andela.log.LogWriter;
-import checkpoint.andela.parser.ReactantFileParser;
 import checkpoint.andela.parser.FileStringReader;
 import checkpoint.andela.parser.ReactantBuffer;
+import checkpoint.andela.parser.ReactantFileParser;
+import checkpoint.andela.parser.ReactantProcessor;
 
 public class TestRun {
 	
@@ -18,15 +19,19 @@ public class TestRun {
 	// BUFFERS
 	ReactantBuffer buffer = new ReactantBuffer();
 	LogBuffer logBuffer = new LogBuffer();
+	
+	// REACTANT PROCESSOR
+	ReactantProcessor processor = new ReactantProcessor(buffer);
+	
 	// OBJECTS
 	LogWriter logWriter = new LogWriter(targetPath, logBuffer);
-	ReactantFileParser fileParser = new ReactantFileParser(buffer);
-	FileStringReader fileReader = new FileStringReader(sourcePath, fileParser);
+	ReactantFileParser fileParser = new ReactantFileParser();
+	FileStringReader fileReader = new FileStringReader(sourcePath, fileParser, processor);
 	DBWriter dbWriter = new DBWriter(dbConfigPath, buffer);
 	
 	// SET LOGWRITER FOR LOGGING ACTIONS
 	{
-		fileParser.setLogWriter(logWriter);
+		fileReader.setLogWriter(logWriter);
 		dbWriter.setLogWriter(logWriter);
 	}
 	
