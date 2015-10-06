@@ -1,15 +1,14 @@
 package checkpoint.andela.parser;
 
-import java.util.TreeMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public class ReactantBuffer
 {
-	  
+
 	// PROPERTIES
 	public static final int RESOURCE_LIMIT = 1;
-	private BlockingQueue<TreeMap<String, String>> queue = new ArrayBlockingQueue<>(RESOURCE_LIMIT);
+	private BlockingQueue<Reactant> queue = new ArrayBlockingQueue<>(RESOURCE_LIMIT);
 	private boolean done = false;
 	// LIST TO HOLD LOG FILES.
 	
@@ -21,7 +20,7 @@ public class ReactantBuffer
 		return queue.size() == 0;
 	}
 	
-	public synchronized void putReactant(TreeMap<String, String> reactant) {
+	public synchronized void putReactant(Reactant reactant) {
 		while (isFull()) {
 			try {
 				wait();
@@ -34,7 +33,7 @@ public class ReactantBuffer
 		notifyAll();
 	}
 	
-	public synchronized TreeMap<String, String> getReactant() {
+	public synchronized Reactant getReactant() {
 		while (isEmpty()) {
 			try {
 				wait();
@@ -43,7 +42,7 @@ public class ReactantBuffer
 				// Ignore
 			}
 		}
-		TreeMap<String, String> reactantData = queue.poll();
+		Reactant reactantData = queue.poll();
 		notifyAll();
 		return reactantData;
 	}

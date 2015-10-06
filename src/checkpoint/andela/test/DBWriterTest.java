@@ -1,13 +1,12 @@
 package checkpoint.andela.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.TreeMap;
 
 import javax.sql.DataSource;
 
@@ -19,6 +18,7 @@ import checkpoint.andela.db.DBManager;
 import checkpoint.andela.db.DBWriter;
 import checkpoint.andela.log.LogBuffer;
 import checkpoint.andela.log.LogWriter;
+import checkpoint.andela.parser.Reactant;
 import checkpoint.andela.parser.ReactantBuffer;
 
 public class DBWriterTest {
@@ -32,7 +32,7 @@ public class DBWriterTest {
 	@Before
 	public void setUp() throws Exception {
 		createTestDBTable();
-		TreeMap<String, String> testReactant = new TreeMap<>();
+		Reactant testReactant = new Reactant();
 		testReactant.put("NAME", "DBWriterTest");
 		stringBuffer.putReactant(testReactant);
 		dbWriter = new DBWriter(config, stringBuffer);

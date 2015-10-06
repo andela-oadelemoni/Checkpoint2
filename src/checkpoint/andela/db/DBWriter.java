@@ -1,8 +1,7 @@
 package checkpoint.andela.db;
 
-import java.util.TreeMap;
-
 import checkpoint.andela.log.LogWriter;
+import checkpoint.andela.parser.Reactant;
 import checkpoint.andela.parser.ReactantBuffer;
 
 public class DBWriter implements Runnable {
@@ -13,10 +12,9 @@ public class DBWriter implements Runnable {
 	private DBManager dbObject;
 	
 	// CONSTRUCTOR
-	public DBWriter(String dbConfigPath, ReactantBuffer buffer, LogWriter logWriter) {
+	public DBWriter(String dbConfigPath, ReactantBuffer buffer) {
 		this.buffer = buffer;
 		dbObject = new DBManager(dbConfigPath);
-		this.logWriter = logWriter;
 	}
 
 	// IMPLEMENT RUNNABLE INTERFACE METHOD
@@ -29,7 +27,7 @@ public class DBWriter implements Runnable {
 	private synchronized void writeToDB() {
 	
 		// GETS COMPLETE REACTANT DATA AND WRITES TO DATABASE
-		TreeMap<String, String> reactant;
+		Reactant reactant;
 		while (!buffer.isDone()) {
 			reactant = buffer.getReactant();
 			String queryString = dbObject.generateInsertQuery(reactant);
@@ -38,6 +36,14 @@ public class DBWriter implements Runnable {
 			logWriter.dbWriterLog(reactant.get("UNIQUE-ID"));
 		}
 		logWriter.setDone(true);
+	}
+	
+	public void setLogWriter(LogWriter logWriter) {
+		this.logWriter = logWriter;
+	}
+	
+	public LogWriter getLogWriter() {
+		return logWriter;
 	}
 	
 }

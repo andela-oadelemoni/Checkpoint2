@@ -18,7 +18,6 @@ public class FileStringReader implements Runnable {
 		this.parser = parser;
 	}
 	
-	// SYNCHRONIZED MODIFIER WAS REMOVED HERE
 	private void readFile() {		
 		String line;
 		try {
@@ -36,7 +35,6 @@ public class FileStringReader implements Runnable {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		readFile();
 	}
 	

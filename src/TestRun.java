@@ -20,9 +20,15 @@ public class TestRun {
 	LogBuffer logBuffer = new LogBuffer();
 	// OBJECTS
 	LogWriter logWriter = new LogWriter(targetPath, logBuffer);
-	ReactantFileParser fileParser = new ReactantFileParser(buffer, logWriter);
+	ReactantFileParser fileParser = new ReactantFileParser(buffer);
 	FileStringReader fileReader = new FileStringReader(sourcePath, fileParser);
-	DBWriter dbWriter = new DBWriter(dbConfigPath, buffer, logWriter);
+	DBWriter dbWriter = new DBWriter(dbConfigPath, buffer);
+	
+	// SET LOGWRITER FOR LOGGING ACTIONS
+	{
+		fileParser.setLogWriter(logWriter);
+		dbWriter.setLogWriter(logWriter);
+	}
 	
 	// THREADS
 	Thread fileReaderThread = new Thread(fileReader);

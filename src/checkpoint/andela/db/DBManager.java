@@ -1,13 +1,20 @@
 package checkpoint.andela.db;
 
-import java.io.*;
-import java.sql.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Map.Entry;
-import java.util.*;
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+import checkpoint.andela.parser.Reactant;
 
 public class DBManager {
 	
@@ -53,14 +60,13 @@ public class DBManager {
 		try (Connection con = dataSource.getConnection()) {
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate(queryString);
-			
 		}
 		catch (SQLException e) {
 			
 		}
 	}
 	
-	public String generateInsertQuery(TreeMap<String, String> dataBaseData) {
+	public String generateInsertQuery(Reactant dataBaseData) {
 		String columnNames = "";
 		String columnValues = "";
 		

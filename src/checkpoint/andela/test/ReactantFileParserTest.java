@@ -65,16 +65,5 @@ public class ReactantFileParserTest {
 		
 		assertEquals("LogWriter setter error", logWriter, actual);
 	}
-	
-	/*@Test
-	public void testLogAction() {
-		LogWriter logWriter = new LogWriter(pathToTarget, new LogBuffer());
-		fileParser.setLogWriter(logWriter);
-		
-		fileParser.formatString(testValidFormat);
-		fileParser.formatString(testLineEnd);
-		
-		logWriter.logToFile();
-	}*/
 
 }
